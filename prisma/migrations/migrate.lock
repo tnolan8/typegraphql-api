@@ -1,0 +1,11 @@
+# IF THERE'S A GIT CONFLICT IN THIS FILE, DON'T SOLVE IT MANUALLY!
+# INSTEAD EXECUTE `prisma migrate fix`
+# Prisma Migrate lockfile v1
+# Read more about conflict resolution here: TODO
+
+20200503155216-init
+20200503181308-create_portfolio
+20200507111526-user_portfolios
+20200507112827-remove_porfolio
+20200507113019-portfolio
+20200507113629-add-rel
