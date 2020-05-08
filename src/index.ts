@@ -1,28 +1,46 @@
+/*
+    Author: tom
+    Date: 08/05/2020
+*/
+
 import "reflect-metadata";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server-express";
 import cors from "cors";
-// import { AuthResolver } from "./resolvers";
 import express from "express";
-import { CreateOneUserResolver, FindOneUserResolver } from "../prisma/generated/type-graphql";
 import { Context } from "./common/types/context";
+import { serviceContainer } from "./ioc";
+import { AuthResolver, UserResolver } from "./resolvers";
+import { applyMiddleware } from "graphql-middleware";
+import { permissions } from "./permissions";
+import winston from "winston";
 
 (async (): Promise<void> => {
+    const logger = winston.createLogger({
+        transports: [
+            new winston.transports.Console()
+        ]
+    });
+    
     const schema = await buildSchema({
-        resolvers: [ CreateOneUserResolver, FindOneUserResolver ],
+        resolvers: [ AuthResolver, UserResolver ],
+        container: serviceContainer,
         emitSchemaFile: path.resolve(__dirname, "./generated-schema.graphql"),
         validate: false,
         dateScalarMode: "timestamp",
     });
-
-    const prisma = new PrismaClient();
     
     const server = new ApolloServer({
-        schema,
+        schema: applyMiddleware(schema, permissions),
         playground: true,
-        context: (req): Context => ({ req, prisma }),
+        context: ({ req, res }): Context => ({ 
+            req,
+            res,
+            prisma: serviceContainer.get(PrismaClient),
+            container: serviceContainer
+         }),
     });
 
     const app = express();

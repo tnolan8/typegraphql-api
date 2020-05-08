@@ -1,6 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-//ignore-warnings
+
 datasource db {
   provider = "postgresql"
   url = "***"
@@ -31,6 +31,6 @@ model Portfolio {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name  String
-  owner User? @relation(fields: [userId], references:[id])
-  userId String?
+  owner User? @relation(fields: [ownerId], references: [id])
+  ownerId String?
 }

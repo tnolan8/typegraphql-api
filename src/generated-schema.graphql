@@ -19,7 +19,7 @@ type Mutation {
 }
 
 type Query {
-  user(where: UserWhereUniqueInput!): User
+  me: UserResponse!
 }
 
 input RegisterInput {
@@ -34,24 +34,9 @@ The javascript `Date` as integer. Type represents date and time as number of mil
 """
 scalar Timestamp
 
-type User {
-  createdAt: Timestamp!
-  email: String!
-  firstname: String!
-  id: String!
-  lastname: String!
-  password: String!
-  updatedAt: Timestamp!
-}
-
 type UserResponse {
   createdAt: Timestamp!
   email: String!
   firstname: String!
   lastname: String!
-}
-
-input UserWhereUniqueInput {
-  email: String
-  id: String
 }
